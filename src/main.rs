@@ -1,12 +1,13 @@
 mod input;
 mod result;
 
-use std::error::Error;
 use std::io::{self, Write, stdout};
 
 use input::{CommandCompleteness, LineInput, determine_command_completeness, read_input};
 
-fn main() -> Result<(), Box<dyn Error>> {
+use crate::result::Result;
+
+fn main() -> Result<()> {
     let mut stdout = stdout();
     let mut input_buffer = String::new();
     let mut completeness = CommandCompleteness::Complete;
@@ -34,6 +35,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         if completeness != CommandCompleteness::Complete {
             continue;
         }
+
+        let tokens = rush_lexer::Lexer::new(&input_buffer).lex();
 
         write!(stdout, "\n\n\n{input_buffer}\n\n\n")?;
         input_buffer.clear();

@@ -1,8 +1,20 @@
-[package]
-name = "rush"
+[workspace]
+resolver = "2"
+members = ["rush-lexer"]
+
+[workspace.package]
 version = "0.1.0"
 edition = "2024"
 
+[workspace.dependencies]
+rush-lexer = { path = "rush-lexer" }
+
+[package]
+name = "rush"
+version.workspace = true
+edition.workspace = true
+
 [dependencies]
-rustix = "1.0.8"
+rush-lexer.workspace = true
 thiserror = "2.0.16"
+rustix = "1.0.8"

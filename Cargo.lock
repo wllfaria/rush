@@ -52,9 +52,14 @@ dependencies = [
 name = "rush"
 version = "0.1.0"
 dependencies = [
+ "rush-lexer",
  "rustix",
  "thiserror",
 ]
+
+[[package]]
+name = "rush-lexer"
+version = "0.1.0"
 
 [[package]]
 name = "rustix"
