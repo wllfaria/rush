@@ -1,9 +1,8 @@
 use std::iter::Peekable;
 use std::str::CharIndices;
 
-use token::{Token, TokenKind};
-
-use crate::token::TokenStream;
+use crate::token::Token;
+pub use crate::token::{BytePos, Span, TokenKind, TokenStream};
 
 mod token;
 
@@ -24,25 +23,30 @@ impl<'src> Lexer<'src> {
     pub fn lex(&mut self) -> TokenStream {
         let mut tokens = vec![];
         if self.source.is_empty() {
-            return TokenStream::new(tokens);
+            return TokenStream::new(tokens, self.source.len());
         }
 
         while let Some((byte_pos, curr)) = self.next() {
+            if is_space(curr) {
+                continue; // skip whitespace
+            }
+
             let next = self.peek();
 
             match (curr, next) {
                 ('|', _) => tokens.push(TokenKind::Pipe.into_token(byte_pos)),
                 (';', _) => tokens.push(TokenKind::Semi.into_token(byte_pos)),
+                ('&', _) => tokens.push(TokenKind::Ampersand.into_token(byte_pos)),
                 _ => tokens.push(self.take_atom(byte_pos)),
             }
         }
 
         tokens.push(self.eof());
-        TokenStream::new(tokens)
+        TokenStream::new(tokens, self.source.len())
     }
 
     fn take_atom(&mut self, start: usize) -> Token {
-        let end = self.take_while(|c| !is_delimiter(c));
+        let end = self.take_while(|c| !is_delimiter(c), start);
         TokenKind::Atom.into_token((start, end))
     }
 
@@ -58,24 +62,21 @@ impl<'src> Lexer<'src> {
         TokenKind::Eof.into_token(self.source.len())
     }
 
-    fn take_while<F>(&mut self, f: F) -> usize
+    fn take_while<F>(&mut self, f: F, start: usize) -> usize
     where
         F: Fn(char) -> bool,
     {
-        let mut last = None;
+        let mut last = (start, char::default());
         while let Some((byte_pos, ch)) = self.peek() {
             if !f(ch) {
                 break;
             };
 
-            last = Some((byte_pos, ch));
+            last = (byte_pos, ch);
             self.next();
         }
 
-        match last {
-            Some((i, ch)) => i + ch.len_utf8(),
-            None => self.source.len(),
-        }
+        last.0 + last.1.len_utf8()
     }
 }
 
@@ -85,36 +86,5 @@ fn is_space(ch: char) -> bool {
 }
 
 fn is_delimiter(ch: char) -> bool {
-    is_space(ch) || matches!(ch, '|' | ';')
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::token::BytePos;
-
-    trait TokenSource<'src> {
-        fn token_source(&self, source: &'src str) -> &'src str;
-    }
-
-    impl<'src> TokenSource<'src> for (BytePos, BytePos) {
-        fn token_source(&self, source: &'src str) -> &'src str {
-            &source[*self.0..*self.1]
-        }
-    }
-
-    #[derive(Debug)]
-    struct TokenTest<'src>(TokenKind, &'src str);
-
-    #[test]
-    fn test_lexing_atom() {
-        let source = "some-command-here";
-        let tokens = Lexer::new(source)
-            .lex()
-            .into_iter()
-            .map(|t| TokenTest(t.0, t.1.token_source(source)))
-            .collect::<Vec<_>>();
-
-        panic!("{tokens:#?}")
-    }
+    is_space(ch) || matches!(ch, '|' | ';' | '&')
 }

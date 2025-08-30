@@ -1,0 +1,29 @@
+---
+source: rush-parser/src/lib.rs
+expression: ast.into_snapshot(source)
+---
+BackgroundJob(
+    Command(
+        SimpleCommandSnapshot {
+            program: Span {
+                start: BytePos(
+                    0,
+                ),
+                end: BytePos(
+                    5,
+                ),
+            },
+            args: [
+                Span {
+                    start: BytePos(
+                        6,
+                    ),
+                    end: BytePos(
+                        7,
+                    ),
+                },
+            ],
+            source: "sleep 2",
+        },
+    ),
+)

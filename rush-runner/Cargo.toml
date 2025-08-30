@@ -1,0 +1,9 @@
+[package]
+name = "rush-runner"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+nix = { version = "0.30.1", features = ["fs", "process", "signal", "term"] }
+rush-parser.workspace = true
+thiserror.workspace = true

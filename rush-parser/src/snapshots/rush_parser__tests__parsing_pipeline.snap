@@ -1,0 +1,50 @@
+---
+source: rush-parser/src/lib.rs
+expression: ast.into_snapshot(source)
+---
+Pipeline(
+    [
+        SimpleCommandSnapshot {
+            program: Span {
+                start: BytePos(
+                    0,
+                ),
+                end: BytePos(
+                    4,
+                ),
+            },
+            args: [
+                Span {
+                    start: BytePos(
+                        5,
+                    ),
+                    end: BytePos(
+                        10,
+                    ),
+                },
+            ],
+            source: "echo hello",
+        },
+        SimpleCommandSnapshot {
+            program: Span {
+                start: BytePos(
+                    13,
+                ),
+                end: BytePos(
+                    15,
+                ),
+            },
+            args: [
+                Span {
+                    start: BytePos(
+                        16,
+                    ),
+                    end: BytePos(
+                        18,
+                    ),
+                },
+            ],
+            source: "wc -l",
+        },
+    ],
+)

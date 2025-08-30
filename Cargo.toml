@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["rush-lexer"]
+members = ["rush-lexer", "rush-parser", "rush-runner"]
 
 [workspace.package]
 version = "0.1.0"
@@ -8,6 +8,10 @@ edition = "2024"
 
 [workspace.dependencies]
 rush-lexer = { path = "rush-lexer" }
+rush-parser = { path = "rush-parser" }
+rush-runner = { path = "rush-runner" }
+thiserror = "2.0.16"
+insta = "1.43.1"
 
 [package]
 name = "rush"
@@ -16,5 +20,8 @@ edition.workspace = true
 
 [dependencies]
 rush-lexer.workspace = true
-thiserror = "2.0.16"
+rush-parser.workspace = true
+rush-runner.workspace = true
+thiserror.workspace = true
 rustix = "1.0.8"
+nix = { version = "0.30.1", features = ["signal", "process"] }

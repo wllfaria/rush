@@ -1,0 +1,9 @@
+[package]
+name = "rush-parser"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+rush-lexer.workspace = true
+thiserror.workspace = true
+insta.workspace = true

@@ -1,0 +1,45 @@
+---
+source: rush-parser/src/lib.rs
+expression: ast.into_snapshot(source)
+---
+Sequence(
+    [
+        Command(
+            SimpleCommandSnapshot {
+                program: Span {
+                    start: BytePos(
+                        0,
+                    ),
+                    end: BytePos(
+                        2,
+                    ),
+                },
+                args: [
+                    Span {
+                        start: BytePos(
+                            3,
+                        ),
+                        end: BytePos(
+                            6,
+                        ),
+                    },
+                ],
+                source: "ls -la",
+            },
+        ),
+        Command(
+            SimpleCommandSnapshot {
+                program: Span {
+                    start: BytePos(
+                        7,
+                    ),
+                    end: BytePos(
+                        10,
+                    ),
+                },
+                args: [],
+                source: "pwd",
+            },
+        ),
+    ],
+)
